@@ -1,9 +1,11 @@
-const blockedUrls = ['*://chess.com/*', '*://twitter.com/*'];
+const blockedUrls = ['*://*.chess.com/*'];
 
 chrome.webRequest.onBeforeRequest.addListener(
-  function(details) {
-    return {redirectUrl: "https://redirected.com/"};
-  },
-  {urls: blockedUrls},
-  ["blocking"]
+    function(details) {
+        const originalUrl = encodeURIComponent(details.url);
+        const redirectUrl = `https://httpbin.org/get?redirected_from=${originalUrl}`;
+        return {redirectUrl: redirectUrl};
+    },
+    {urls: blockedUrls},
+    ["blocking"]
 );
